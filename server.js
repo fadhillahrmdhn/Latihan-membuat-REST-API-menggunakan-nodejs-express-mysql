@@ -1,13 +1,12 @@
-const express = require('express')
+const express = require('express');
 require('dotenv').config();
 
-const app = express()
+const studentRoutes = require('./routes/studentRoutes');
 
-app.get('/',(req,res)=>{
-    res.send('hallo dunia');
-});
+const app = express();
+
+app.use('/api/students',studentRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-
-app.listen(PORT,console.log(`server running in ${process.env.NODE_ENV} mode port ${PORT}`));
+app.listen(PORT, console.log(`server running in ${process.env.NODE_ENV} mode port ${PORT}`));
