@@ -5,6 +5,12 @@ const studentRoutes = require('./routes/studentRoutes');
 
 const app = express();
 
+app.use((req,res,next)=>{
+    req.hello='hello world';
+
+    next();
+});
+
 app.use('/api/students',studentRoutes);
 
 const PORT = process.env.PORT || 5000;

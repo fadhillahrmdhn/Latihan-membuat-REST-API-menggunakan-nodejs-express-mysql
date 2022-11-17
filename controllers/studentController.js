@@ -5,6 +5,7 @@ exports.getAllStudents=(req,res,next)=>{
     res.status(200).json({
         succes: 'true',
         message: 'melihat seluruh data mahasiswa',
+        middleware: req.hello,
       });
 }
 
