@@ -10,12 +10,6 @@ const app = express();
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  req.hello = 'hello world';
-
-  next();
-});
-
 app.use('/api/students', studentRoutes);
 
 const PORT = process.env.PORT || 5000;

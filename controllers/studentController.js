@@ -2,12 +2,21 @@ const Student = require('../models/studentModel');
 //@desc mengambil seluruh data mahasiswa
 //@route GET /api/students
 //access public
-exports.getAllStudents=(req,res,next)=>{
-    res.status(200).json({
+exports.getAllStudents= async(req,res,next)=>{
+    try{
+        const student = await Student.findAll();
+
+        res.status(200).json({
         succes: true,
         message: 'melihat seluruh data mahasiswa',
-        middleware: req.hello,
+        data: student,
       });
+    }catch{
+      res.status(500).json({
+        succes: false,
+        message:'something went wrong'
+      });
+    }
 };
 
 //@desc menambahkan data mahasiswa
@@ -34,11 +43,28 @@ exports.createStudent= async(req,res,next)=>{
 //@desc melihat data satu mahasiswa
 //@route GET /api/students/:id
 //access public
-exports.getStudent=(req,res,next)=>{
-    res.status(200).json({
-        succes: true,
-        message: `melihat data mahasiswa ke-${req.params.id}`,
+exports.getStudent= async(req,res,next)=>{
+    try{
+      const student = await Student.findByPk(req.params.id);
+
+      if(!student){
+        return res.status(404).json({
+          succes: false,
+          message:'data mahasiswa tidak ditemukan'
+        });
+      }
+
+      res.status(200).json({
+      succes: true,
+      message: `melihat data mahasiswa ke-${req.params.id}`,
+      data:student,
       });
+    }catch(err){
+      res.status(400).json({
+      succes: false,
+      message: err.message,
+      });
+    }
 };
 
 //@desc memperbaharui data mahasiswa
