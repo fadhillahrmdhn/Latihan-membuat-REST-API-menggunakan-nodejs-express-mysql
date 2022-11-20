@@ -1,7 +1,8 @@
 const {DataTypes, UUIDV4} = require('sequelize')
 const sequelize = require('../utils/database')
+const bcrypt = require("bcrypt");
 
-const student = sequelize.define('student',{
+const student = sequelize.define('students',{
     id:{
         type: DataTypes.UUID,
         primaryKey:true,
@@ -10,22 +11,20 @@ const student = sequelize.define('student',{
     },
     name:{
         type: DataTypes.STRING,
-        allowNull:false
+        allowNull:false,
     },
-    nim:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    jurusan:{
-        type:DataTypes.STRING,
-        allowNull:false
-    },
-    ipk:{
-        type:DataTypes.DOUBLE,
-        allowNull:false
-    }
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+       },
+    email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+       },
 },{
-    underscored:true
+    underscored:true,
 });
+
+
 
 module.exports=student;

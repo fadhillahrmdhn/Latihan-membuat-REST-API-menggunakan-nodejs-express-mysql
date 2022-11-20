@@ -1,4 +1,13 @@
 const Student = require('../models/studentModel');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
+const student = require('../models/studentModel');
+
+const getHashedPassword = (password) => {
+  const sha256 = crypto.createHash('sha256');
+  const hash = sha256.update(password).digest('base64');
+  return hash;
+}
 //@desc mengambil seluruh data mahasiswa
 //@route GET /api/students
 //access public
@@ -19,18 +28,55 @@ exports.getAllStudents = async (req, res, next) => {
   }
 };
 
+//@desc login
+//@route post /api/students/login
+//access public
+exports.loginStudents = async (req, res, next) => {
+  try {
+  const { email, password } = req.body;
+  const hashedPassword = getHashedPassword(password);
+
+  const user = await Student.findOne({
+    where: {
+      email: email,
+      password: hashedPassword
+    }
+  });
+  if(!user){
+    res.status(402).json({
+        success: false
+    })
+  }else{
+    res.status(200).json({
+        success: true
+    })
+ }
+  } catch {
+    res.status(500).json({
+      succes: false,
+      message: 'something went wrong',
+    });
+  }
+};
+
 //@desc menambahkan data mahasiswa
 //@route POST /api/students
 //access public
-exports.createStudent = async (req, res, next) => {
+exports.registerStudent = async (req, res, next) => {
   try {
-    const student = await Student.create(req.body);
 
-    res.status(200).json({
+ const hashedPassword = getHashedPassword(req.body.password);
+    const student = await Student.create({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword
+  })
+      res.status(200).json({
       succes: true,
       message: 'berhasil menambahkan data mahasiswa',
       data: student,
     });
+
   } catch (err) {
     res.status(400).json({
       succes: false,
@@ -98,11 +144,26 @@ exports.updateStudent = async (req, res, next) => {
 //@desc memhapus data mahasiswa
 //@route DELETE /api/students/:id
 //access public
-exports.deleteStudent = (req, res, next) => {
+exports.deleteStudent = async(req, res, next) => {
   try {
-  } catch (err) {}
-  res.status(200).json({
+    const student = await Student.findByPk(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({
+        succes: false,
+        message: 'data mahasiswa tidak ditemukan',
+      });
+    }
+
+    await student.destroy();
+
+    res.status(200).json({
     succes: true,
-    message: `menghapus data mahasiswa ke-${req.params.id}`,
+    message: `data mahasiswa berhasil terhapus`,
+  });
+  } catch (err) {}
+  res.status(400).json({
+    succes: false,
+    message: 'something went wrong',
   });
 };

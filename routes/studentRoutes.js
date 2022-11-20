@@ -1,12 +1,16 @@
 const express = require('express');
+let models = require('../models/studentModel');
+let Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+
 const {
-  getAllStudents,createStudent,getStudent,deleteStudent,updateStudent
+  getAllStudents,registerStudent,getStudent,deleteStudent,updateStudent,loginStudents
 }=require('../controllers/studentController');
 
 const router = express.Router();
 
-router.route('/').get(getAllStudents).post(createStudent);
-
+router.route('/').get(getAllStudents).post(registerStudent);
+router.route('/login').post(loginStudents);
 router.route('/:id').get(getStudent).put(updateStudent).delete(deleteStudent);
 
 module.exports = router;
