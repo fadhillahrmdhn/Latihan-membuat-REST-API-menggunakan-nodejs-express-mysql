@@ -1,7 +1,6 @@
 const Student = require('../models/studentModel');
-const bcrypt = require('bcrypt');
 const crypto = require('crypto');
-const student = require('../models/studentModel');
+
 
 const getHashedPassword = (password) => {
   const sha256 = crypto.createHash('sha256');
@@ -44,11 +43,13 @@ exports.loginStudents = async (req, res, next) => {
   });
   if(!user){
     res.status(402).json({
-        success: false
+        success: false,
+        message:'email atau password anda salah'
     })
   }else{
     res.status(200).json({
-        success: true
+        success: true,
+        data: user,
     })
  }
   } catch {
@@ -161,9 +162,11 @@ exports.deleteStudent = async(req, res, next) => {
     succes: true,
     message: `data mahasiswa berhasil terhapus`,
   });
-  } catch (err) {}
-  res.status(400).json({
+  } catch (err) {
+    res.status(400).json({
     succes: false,
-    message: 'something went wrong',
+    message: err.message,
   });
+  }
+
 };

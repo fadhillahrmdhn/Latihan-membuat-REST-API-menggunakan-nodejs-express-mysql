@@ -1,7 +1,4 @@
 const express = require('express');
-let models = require('../models/studentModel');
-let Sequelize = require('sequelize');
-const bcrypt = require('bcrypt');
 
 const {
   getAllStudents,registerStudent,getStudent,deleteStudent,updateStudent,loginStudents
